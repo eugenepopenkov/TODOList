@@ -2,7 +2,7 @@ package com.todolist.repositories;
 
 import com.todolist.repositories.entities.Event;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.todolist.utils.DateUtil.addDay;
 
-
+@Repository
 public class EventRepositoryImpl implements EventRepository{
 
     private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("com.todolist.repositories.entities");
@@ -40,7 +40,9 @@ public class EventRepositoryImpl implements EventRepository{
 
     public void deleteEvent(Event event) {
         if (entityManager.contains(event)) {
+            entityManager.getTransaction().begin();
             entityManager.remove(event);
+            entityManager.getTransaction().commit();
         } else {
             entityManager.merge(event);
         }
